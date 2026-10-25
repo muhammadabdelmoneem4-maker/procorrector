@@ -1,0 +1,72 @@
+{
+  "name": "procorrector",
+  "productName": "ProCorrector",
+  "version": "2.0.0",
+  "description": "تسجيل تعليقات المعلم الصوتية على الشاشة بضغطة زر — Record quick voice-over-screen corrections for students.",
+  "main": "main.js",
+  "author": "Muhammad Abdelmoneem",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis --x64 --publish never",
+    "dist:mac": "electron-builder --mac dmg --arm64 --x64 --publish never"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "fix-webm-duration": "^1.0.6"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.procorrector.app",
+    "productName": "ProCorrector",
+    "copyright": "© 2026 ProCorrector",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "afterPack": "build/after-pack.js",
+    "publish": null,
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "ProCorrector-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "ProCorrector"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.education",
+      "identity": null,
+      "hardenedRuntime": false,
+      "artifactName": "ProCorrector-${version}-${arch}.${ext}",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "ProCorrector يحتاج الميكروفون لتسجيل تعليقك الصوتي. ProCorrector needs the microphone to record your spoken comments.",
+        "LSUIElement": false
+      }
+    },
+    "dmg": {
+      "title": "ProCorrector"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'">
+  <title>ProCorrector</title>
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/500.css">
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/600.css">
+  <style>
+    html, body { margin: 0; background: transparent; overflow: hidden; height: 100%; }
+    body {
+      font-family: "IBM Plex Sans Arabic", system-ui, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      user-select: none;
+    }
+    .pill {
+      display: flex; align-items: center; gap: 12px;
+      height: 48px;
+      padding-inline: 16px 6px;
+      border-radius: 999px;
+      background: #1B2557;
+      color: #EEF1FB;
+      border: 1px solid rgba(238, 241, 251, .16);
+      box-shadow: 0 8px 22px rgba(9, 12, 34, .35);
+      -webkit-app-region: drag;
+    }
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #E0383D;
+      box-shadow: 0 0 0 0 rgba(224, 56, 61, .6);
+      animation: pulse 1.4s ease-out infinite;
+    }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 9px rgba(224, 56, 61, 0); } 100% { box-shadow: 0 0 0 0 rgba(224, 56, 61, 0); } }
+    .time { font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; direction: ltr; min-width: 44px; }
+    .bars { display: flex; align-items: center; gap: 3px; height: 20px; direction: ltr; }
+    .bars i { display: block; width: 3px; height: 4px; border-radius: 2px; background: #A7B0D6; transition: height .08s linear; }
+    .actions { display: flex; gap: 4px; -webkit-app-region: no-drag; }
+    button {
+      font: inherit; font-size: 13.5px; font-weight: 600;
+      height: 36px; border-radius: 999px; border: 0; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .save { background: #E0383D; color: #fff; padding: 0 14px; }
+    .save:hover { background: #B92429; }
+    .save .sq { width: 10px; height: 10px; border-radius: 2px; background: #fff; }
+    .discard { background: transparent; color: #A7B0D6; padding: 0 10px; }
+    .discard:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+  </style>
+</head>
+<body>
+  <div class="pill">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="time" id="time">0:00</span>
+    <span class="bars" id="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    <span class="actions">
+      <button class="discard" id="discard" type="button"></button>
+      <button class="save" id="save" type="button"><span class="sq"></span><span id="saveText"></span></button>
+    </span>
+  </div>
+  <script src="i18n.js"></script>
+  <script src="indicator.js"></script>
+</body>
+</html>

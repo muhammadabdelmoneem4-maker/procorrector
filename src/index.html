@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: file: blob:; media-src 'self' file: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'">
+  <title>ProCorrector</title>
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/400.css">
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/500.css">
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/600.css">
+  <link rel="stylesheet" href="../node_modules/@fontsource/ibm-plex-sans-arabic/700.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Record panel -->
+    <aside class="panel">
+      <div class="panel-top">
+        <div class="brand">
+          <img class="brand-mark" src="../assets/icon-256.png" alt="">
+          <div>
+            <div class="brand-name">ProCorrector</div>
+            <div class="brand-tag" data-i18n="appTagline"></div>
+          </div>
+        </div>
+        <div class="panel-tools">
+          <button class="chip" id="langBtn" type="button"></button>
+          <button class="icon-btn on-ink" id="settingsBtn" type="button" data-i18n-title="settings" data-icon="gear"></button>
+        </div>
+      </div>
+
+      <div id="permBanner" class="perm" hidden>
+        <strong id="permTitle"></strong>
+        <p id="permBody"></p>
+        <div class="perm-actions">
+          <button class="btn small light" id="permOpen" type="button" data-i18n="permOpen"></button>
+          <button class="btn small ghost-light" id="permRelaunch" type="button" data-i18n="permRelaunch"></button>
+        </div>
+      </div>
+
+      <div class="recorder">
+        <label class="field-label" for="studentInput" data-i18n="studentLabel"></label>
+        <input id="studentInput" class="student-input" type="text" autocomplete="off" maxlength="70" data-i18n-placeholder="studentPlaceholder">
+
+        <div class="rec-stage">
+          <button id="recBtn" class="rec-btn" type="button" aria-live="polite">
+            <svg class="ring" viewBox="0 0 220 220" aria-hidden="true">
+              <path pathLength="1" d="M112 14c50 1 92 38 94 92 2 55-41 99-95 100-55 1-99-42-100-96C10 56 52 16 104 13c14-1 26 1 37 5"/>
+            </svg>
+            <span class="rec-core"><span class="rec-dot"></span></span>
+          </button>
+          <div class="rec-label" id="recLabel" data-i18n="recordStart"></div>
+          <div class="rec-hint" id="recHint">
+            <span data-i18n="recordHintBefore"></span>
+            <kbd class="keycap" id="hotkeyCap">F8</kbd>
+            <span data-i18n="recordHintAfter"></span>
+          </div>
+          <div class="rec-subhint" id="macHint" hidden data-i18n="macFnHint"></div>
+        </div>
+      </div>
+
+      <div class="how">
+        <div class="how-title" data-i18n="howTitle"></div>
+        <ol class="how-list">
+          <li><span class="how-n">1</span><span data-i18n="how1"></span></li>
+          <li><span class="how-n">2</span><span data-i18n="how2" data-key></span></li>
+          <li><span class="how-n">3</span><span data-i18n="how3" data-key></span></li>
+        </ol>
+      </div>
+    </aside>
+
+    <!-- Clips -->
+    <main class="clips">
+      <header class="clips-head">
+        <div class="clips-title">
+          <h1 data-i18n="clipsTitle"></h1>
+          <span class="count" id="clipCount"></span>
+        </div>
+        <div class="clips-tools">
+          <label class="search">
+            <span class="search-icon" data-icon="search"></span>
+            <input id="searchInput" type="search" data-i18n-placeholder="search">
+          </label>
+          <button class="btn outline" id="openFolderBtn" type="button">
+            <span data-icon="folder"></span><span data-i18n="openFolder"></span>
+          </button>
+        </div>
+      </header>
+
+      <p class="drag-hint" id="dragHint"><span data-icon="grip"></span><span data-i18n="dragHint"></span></p>
+
+      <ul class="clip-list" id="clipList"></ul>
+
+      <div class="empty" id="emptyState" hidden>
+        <svg class="empty-art" viewBox="0 0 240 150" aria-hidden="true">
+          <rect x="34" y="16" width="172" height="112" rx="10" class="ea-page"/>
+          <line x1="56" y1="44" x2="184" y2="44" class="ea-line"/>
+          <line x1="56" y1="64" x2="168" y2="64" class="ea-line"/>
+          <line x1="56" y1="84" x2="176" y2="84" class="ea-line"/>
+          <line x1="56" y1="104" x2="132" y2="104" class="ea-line"/>
+          <path d="M150 52c18-4 36 4 38 18s-14 24-32 24-34-8-34-20 12-20 28-22" class="ea-circle"/>
+        </svg>
+        <h2 data-i18n="emptyTitle"></h2>
+        <p data-i18n="emptyBody" data-key></p>
+      </div>
+      <p class="no-results" id="noResults" hidden data-i18n="noResults"></p>
+    </main>
+  </div>
+
+  <!-- Player -->
+  <dialog class="player" id="player">
+    <div class="player-head">
+      <div class="player-title" id="playerTitle"></div>
+      <button class="icon-btn" id="playerClose" type="button" data-icon="x" data-i18n-title="sClose"></button>
+    </div>
+    <video id="playerVideo" controls preload="metadata"></video>
+  </dialog>
+
+  <!-- Confirm -->
+  <dialog class="confirm" id="confirmDlg">
+    <p id="confirmText"></p>
+    <div class="confirm-actions">
+      <button class="btn outline" id="confirmNo" type="button" data-i18n="cancel"></button>
+      <button class="btn danger" id="confirmYes" type="button" data-i18n="deleteYes"></button>
+    </div>
+  </dialog>
+
+  <!-- Settings -->
+  <dialog class="sheet" id="settingsDlg">
+    <div class="sheet-head">
+      <h2 data-i18n="sTitle"></h2>
+      <button class="icon-btn" id="settingsClose" type="button" data-icon="x" data-i18n-title="sClose"></button>
+    </div>
+    <div class="sheet-body">
+      <section class="s-group">
+        <h3 data-i18n="sRecording"></h3>
+
+        <div class="s-row">
+          <div class="s-text">
+            <div class="s-label" data-i18n="sHotkey"></div>
+            <div class="s-help" id="hotkeyHelp" data-i18n="sHotkeyHelp"></div>
+          </div>
+          <div class="s-control hotkey-control">
+            <kbd class="keycap big" id="hotkeyShow">F8</kbd>
+            <button class="btn outline small" id="hotkeyChange" type="button" data-i18n="sHotkeyChange"></button>
+          </div>
+        </div>
+
+        <div class="s-row stack">
+          <label class="s-label" for="micSelect" data-i18n="sMic"></label>
+          <select id="micSelect"></select>
+          <div class="meter" aria-hidden="true"><span id="micMeter"></span></div>
+          <div class="s-help" data-i18n="sMicTest"></div>
+        </div>
+
+        <div class="s-row stack">
+          <div class="s-label" data-i18n="sScreen"></div>
+          <div class="screens" id="screenList"></div>
+        </div>
+
+        <div class="s-row stack">
+          <label class="s-label" for="qualitySelect" data-i18n="sQuality"></label>
+          <select id="qualitySelect">
+            <option value="1080" data-i18n="sQ1080"></option>
+            <option value="720" data-i18n="sQ720"></option>
+          </select>
+        </div>
+      </section>
+
+      <section class="s-group">
+        <h3 data-i18n="sBehavior"></h3>
+        <label class="check"><input type="checkbox" id="hideToggle"><span data-i18n="sHide"></span></label>
+        <label class="check"><input type="checkbox" id="showAfterToggle"><span data-i18n="sShowAfter"></span></label>
+      </section>
+
+      <section class="s-group">
+        <h3 data-i18n="sStorage"></h3>
+        <div class="s-row">
+          <code class="path" id="saveDirText"></code>
+          <button class="btn outline small" id="saveDirChange" type="button" data-i18n="sChange"></button>
+        </div>
+      </section>
+
+      <section class="s-group">
+        <h3 data-i18n="sAppearance"></h3>
+        <div class="seg" id="themeSeg" role="radiogroup">
+          <button type="button" data-theme-val="system" data-i18n="sThemeSystem"></button>
+          <button type="button" data-theme-val="light" data-i18n="sThemeLight"></button>
+          <button type="button" data-theme-val="dark" data-i18n="sThemeDark"></button>
+        </div>
+      </section>
+
+      <p class="version" id="versionText"></p>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="../node_modules/fix-webm-duration/fix-webm-duration.js"></script>
+  <script src="i18n.js"></script>
+  <script src="icons.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
